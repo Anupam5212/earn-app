@@ -616,22 +616,72 @@ body {
     }
 }
 
-.nav-links {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-link {
+.navbar .menu-btn {
+    background: none;
+    border: none;
     color: white;
-    text-decoration: none;
-    padding: 0.5rem 0;
-    border-bottom: 2px solid transparent;
-    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
-.nav-link:hover, .nav-link.active {
-    border-bottom-color: #4CAF50;
-    color: #4CAF50;
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: -250px; /* Initially hidden */
+    background-color: #222;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidenav a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover, .sidenav a.active {
+    color: #f1f1f1;
+}
+
+.sidenav .close-btn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 5;
+    display: none;
+    transition: opacity 0.5s;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Remove old nav-links styling */
+.nav-links {
+    display: none;
+}
+.nav-link {
+    border-bottom: none; /* remove old style */
 }
 
 .page {

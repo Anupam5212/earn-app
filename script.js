@@ -281,7 +281,27 @@ if (closeAdModalBtn) {
     };
 }
 
-const navLinks = document.querySelectorAll('.nav-link');
+const menuBtn = document.getElementById('menu-btn');
+const sidenav = document.getElementById('sidenav');
+const closeBtn = document.querySelector('.close-btn');
+const overlay = document.getElementById('overlay');
+
+function openNav() {
+    sidenav.style.left = "0";
+    overlay.classList.add('active');
+}
+
+function closeNav() {
+    sidenav.style.left = "-250px";
+    overlay.classList.remove('active');
+}
+
+menuBtn.addEventListener('click', openNav);
+closeBtn.addEventListener('click', closeNav);
+overlay.addEventListener('click', closeNav);
+
+// Update the nav link logic to close the sidenav on click
+const navLinks = document.querySelectorAll('.sidenav .nav-link');
 const pages = document.querySelectorAll('.page');
 
 navLinks.forEach(link => {
@@ -300,5 +320,14 @@ navLinks.forEach(link => {
             navLink.classList.remove('active');
         });
         link.classList.add('active');
+
+        // Close the nav after clicking a link
+        closeNav();
     });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ... existing code ...
+
+    // ... (rest of the script)
 }); 
