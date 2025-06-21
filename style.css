@@ -566,159 +566,50 @@ body {
 .ad-modal-content {
     background: #fff;
     border-radius: 16px;
+    padding: 18px 12px 12px 12px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-    min-width: 350px;
+    min-width: 320px;
+    min-height: 220px;
     max-width: 95vw;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-.ad-header {
-    background: linear-gradient(90deg, #f76b1c 60%, #fda085 100%);
-    color: #fff;
-    padding: 16px 20px;
-    text-align: center;
-    position: relative;
-}
-.ad-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-.ad-timer {
-    position: absolute;
-    top: 16px;
-    right: 20px;
-    background: rgba(255,255,255,0.2);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: bold;
-}
-.ad-body {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 280px;
+    position: relative;
 }
 #adsterra-ad-container {
     width: 300px;
     min-height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.demo-ad {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.ad-placeholder {
-    background: #f8f9fa;
-    border: 2px dashed #dee2e6;
-    border-radius: 12px;
-    padding: 40px 20px;
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-}
-.ad-placeholder h4 {
-    color: #f76b1c;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-}
-.ad-placeholder p {
-    color: #6c757d;
-    margin-bottom: 20px;
-    font-size: 0.9rem;
-}
-.ad-progress {
-    background: #e9ecef;
-    border-radius: 10px;
-    height: 8px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-.progress-bar {
-    background: linear-gradient(90deg, #f76b1c 60%, #fda085 100%);
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s ease;
-    animation: progress 30s linear forwards;
-}
-@keyframes progress {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-.ad-footer {
-    background: #f8f9fa;
-    padding: 16px 20px;
-    text-align: center;
-    border-top: 1px solid #dee2e6;
+    margin: 12px 0;
 }
 #close-ad-modal {
+    position: absolute;
+    top: 10px;
+    right: 16px;
     background: #f76b1c;
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 24px;
+    padding: 6px 18px;
     font-size: 1rem;
-    font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
 }
 #close-ad-modal:enabled {
-    background: #f76b1c;
     opacity: 1;
 }
-#close-ad-modal:enabled:hover {
-    background: #ff9a44;
-    transform: translateY(-1px);
-}
 #close-ad-modal:disabled {
-    background: #6c757d;
     cursor: not-allowed;
-    opacity: 0.7;
-}
-.ad-note {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin: 0;
+    opacity: 0.5;
 }
 @media (max-width: 600px) {
     .ad-modal-content {
         min-width: 90vw;
-        margin: 20px;
-    }
-    .ad-header {
-        padding: 12px 16px;
-    }
-    .ad-header h3 {
-        font-size: 1.1rem;
-    }
-    .ad-timer {
-        position: static;
-        margin-top: 8px;
-        display: inline-block;
-    }
-    .ad-body {
-        padding: 16px;
-        min-height: 220px;
+        padding: 8px 2vw 8px 2vw;
     }
     #adsterra-ad-container {
-        width: 100%;
-        min-height: 200px;
-    }
-    .ad-placeholder {
-        padding: 30px 15px;
-    }
-    .ad-footer {
-        padding: 12px 16px;
+        width: 95vw;
+        min-height: 180px;
     }
 } 

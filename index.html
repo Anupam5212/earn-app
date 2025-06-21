@@ -80,44 +80,16 @@
             </section>
             <section class="ad-earn">
                 <h3>Watch Ad & Earn</h3>
-                <div class="ad-info">
-                    <p style="font-size: 0.9rem; color: #6c757d; margin-bottom: 10px;">
-                        📺 Daily Limit: 10 ads | ⏱️ Watch Time: 30 seconds | 💰 Earn: 5-50 coins per ad
-                    </p>
-                </div>
                 <button id="watch-ad-btn">Watch Ad</button>
                 <div class="ad-earn-info">
                     <span id="ad-earn-result"></span>
                 </div>
                 <div id="ad-modal" class="ad-modal" style="display:none;">
                     <div class="ad-modal-content">
-                        <div class="ad-header">
-                            <h3>Watch Ad to Earn Coins</h3>
-                            <div class="ad-timer">Time remaining: <span id="ad-timer">30</span>s</div>
-                        </div>
-                        <div class="ad-body">
-                            <div id="adsterra-ad-container">
-                                <!-- Real Profitableratecpm Ad Code -->
-                                <script type='text/javascript' src='//pl26966132.profitableratecpm.com/a3/3e/5d/a33e5d9ade14b1fba1a5218849b4e764.js'></script>
-                                
-                                <!-- Demo Ad Fallback (shows if real ad fails to load) -->
-                                <div class="demo-ad" id="demo-ad" style="display: none;">
-                                    <div class="ad-placeholder">
-                                        <h4>📺 Advertisement</h4>
-                                        <p>Ad loading... Please wait</p>
-                                        <div class="ad-progress">
-                                            <div class="progress-bar"></div>
-                                        </div>
-                                        <div style="margin-top: 15px; font-size: 0.85rem; color: #6c757d;">
-                                            <strong>Real Ad Mode:</strong> 30 seconds timer
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ad-footer">
-                            <button id="close-ad-modal" disabled>Close Ad</button>
-                            <p class="ad-note">Please watch the complete ad to earn coins</p>
+                        <button id="close-ad-modal" disabled>Close</button>
+                        <!-- Adsterra ad code -->
+                        <div id="adsterra-ad-container">
+                            <script type='text/javascript' src='//pl26966132.profitableratecpm.com/a3/3e/5d/a33e5d9ade14b1fba1a5218849b4e764.js'></script>
                         </div>
                     </div>
                 </div>

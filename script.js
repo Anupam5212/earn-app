@@ -250,243 +250,33 @@ const watchAdBtn = document.getElementById('watch-ad-btn');
 const adEarnResult = document.getElementById('ad-earn-result');
 const adModal = document.getElementById('ad-modal');
 const closeAdModalBtn = document.getElementById('close-ad-modal');
-const adTimer = document.getElementById('ad-timer');
 let adRewardGiven = false;
-let adTimerInterval = null;
-let adWatchTime = 30; // 30 seconds ad watch time
-let dailyAdCount = 0;
-let lastAdDate = null;
-
-// Check daily ad limit
-function checkDailyAdLimit() {
-    const today = new Date().toDateString();
-    if (lastAdDate !== today) {
-        dailyAdCount = 0;
-        lastAdDate = today;
-    }
-    return dailyAdCount < 10; // Maximum 10 ads per day
-}
-
-// Load real Profitableratecpm ad
-function loadAdsterraAd() {
-    const adContainer = document.getElementById('adsterra-ad-container');
-    const demoAd = document.getElementById('demo-ad');
-    
-    // Check if real ad is loaded
-    const realAdScript = adContainer.querySelector('script[src*="profitableratecpm"]');
-    
-    if (realAdScript) {
-        // Real ad is present, hide demo ad initially
-        if (demoAd) {
-            demoAd.style.display = 'none';
-        }
-        
-        // Add a delay to let the real ad load
-        setTimeout(() => {
-            // Check if ad loaded successfully by looking for ad elements
-            const adElements = adContainer.querySelectorAll('iframe, img, div[id*="ad"], div[class*="ad"], a[href*="profitableratecpm"]');
-            
-            if (adElements.length === 0) {
-                // Real ad failed to load, show demo ad
-                if (demoAd) {
-                    demoAd.style.display = 'block';
-                    demoAd.innerHTML = `
-                        <div class="ad-placeholder">
-                            <h4>📺 Demo Advertisement</h4>
-                            <p>Real ad failed to load. Using demo mode.</p>
-                            <div class="ad-progress">
-                                <div class="progress-bar"></div>
-                            </div>
-                            <div style="margin-top: 15px; font-size: 0.85rem; color: #6c757d;">
-                                <strong>Demo Mode:</strong> 30 seconds timer
-                            </div>
-                        </div>
-                    `;
-                }
-                return false; // Demo mode
-            } else {
-                // Real ad loaded successfully
-                console.log('Real ad loaded successfully');
-                return true; // Real ad mode
-            }
-        }, 3000); // Wait 3 seconds for ad to load
-        
-        return true; // Assume real ad mode initially
-    } else {
-        // No real ad script found, show demo ad
-        if (demoAd) {
-            demoAd.style.display = 'block';
-        }
-        return false; // Demo mode
-    }
-}
-
 if (watchAdBtn) {
     watchAdBtn.onclick = () => {
-        // Check daily limit
-        if (!checkDailyAdLimit()) {
-            adEarnResult.innerHTML = `
-                <div style="color: #dc3545; font-weight: bold;">
-                    ⚠️ Daily Limit Reached
-                </div>
-                <div style="margin-top: 5px; font-size: 0.9rem; color: #6c757d;">
-                    Aap aaj 10 ads dekh chuke hain. Kal fir try karein.
-                </div>
-            `;
-            return;
-        }
-        
         adEarnResult.textContent = '';
         adModal.style.display = 'flex';
         closeAdModalBtn.disabled = true;
         adRewardGiven = false;
-        
-        // Load ad (real or demo)
-        const isRealAd = loadAdsterraAd();
-        
-        // Show appropriate loading message
-        const demoAd = document.getElementById('demo-ad');
-        if (demoAd) {
-            if (isRealAd) {
-                demoAd.innerHTML = `
-                    <div class="ad-placeholder">
-                        <h4>📺 Real Advertisement</h4>
-                        <p>Loading real ad from Profitableratecpm...</p>
-                        <div class="ad-progress">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <div style="margin-top: 15px; font-size: 0.85rem; color: #6c757d;">
-                            <strong>Real Ad Mode:</strong> 30 seconds timer
-                        </div>
-                    </div>
-                `;
-                demoAd.style.display = 'block';
-            } else {
-                demoAd.innerHTML = `
-                    <div class="ad-placeholder">
-                        <h4>📺 Demo Advertisement</h4>
-                        <p>Demo mode - Real ad will appear when available</p>
-                        <div class="ad-progress">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <div style="margin-top: 15px; font-size: 0.85rem; color: #6c757d;">
-                            <strong>Demo Mode:</strong> 30 seconds timer
-                        </div>
-                    </div>
-                `;
-                demoAd.style.display = 'block';
-            }
-        }
-        
-        // Start timer
-        let timeLeft = adWatchTime;
-        adTimer.textContent = timeLeft;
-        
-        adTimerInterval = setInterval(() => {
-            timeLeft--;
-            adTimer.textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(adTimerInterval);
-                closeAdModalBtn.disabled = false;
-                adRewardGiven = true;
-                adTimer.textContent = '0';
-                
-                // Enable close button with visual feedback
-                closeAdModalBtn.style.background = '#28a745';
-                closeAdModalBtn.textContent = '✅ Ad Complete - Claim Reward';
-            }
-        }, 1000);
-        
-        // Start progress bar animation
-        const progressBar = document.querySelector('.progress-bar');
-        if (progressBar) {
-            progressBar.style.animation = 'none';
-            setTimeout(() => {
-                progressBar.style.animation = `progress ${adWatchTime}s linear forwards`;
-            }, 100);
-        }
+        setTimeout(() => {
+            closeAdModalBtn.disabled = false;
+            adRewardGiven = true;
+        }, 15000); // 15 sec ad watch simulation
     };
 }
-
 if (closeAdModalBtn) {
     closeAdModalBtn.onclick = () => {
         adModal.style.display = 'none';
-        
-        // Reset close button
-        closeAdModalBtn.style.background = '#f76b1c';
-        closeAdModalBtn.textContent = 'Close Ad';
-        
-        // Clear timer
-        if (adTimerInterval) {
-            clearInterval(adTimerInterval);
-            adTimerInterval = null;
-        }
-        
         if (adRewardGiven) {
-            // Increment daily ad count
-            dailyAdCount++;
-            
-            // Enhanced reward system with better distribution
-            const rewards = [
-                { coins: 5, chance: 40 },   // 40% chance for 5 coins
-                { coins: 10, chance: 25 },  // 25% chance for 10 coins
-                { coins: 15, chance: 20 },  // 20% chance for 15 coins
-                { coins: 25, chance: 10 },  // 10% chance for 25 coins
-                { coins: 50, chance: 5 }    // 5% chance for 50 coins
-            ];
-            
-            // Calculate reward based on chances
-            const random = Math.random() * 100;
-            let cumulativeChance = 0;
-            let selectedReward = rewards[0];
-            
-            for (const reward of rewards) {
-                cumulativeChance += reward.chance;
-                if (random <= cumulativeChance) {
-                    selectedReward = reward;
-                    break;
-                }
-            }
-            
-            const coins = selectedReward.coins;
+            // Random coins: 5, 10, 20, 30, 50 (5 ka chance sabse zyada)
+            const coinsArr = [5,5,5,10,10,20,30,50];
+            const coins = coinsArr[Math.floor(Math.random() * coinsArr.length)];
             const rupees = Math.floor(coins / 10);
-            
-            earnings.push({ 
-                date: new Date().toISOString().slice(0,10), 
-                desc: 'Watch Ad Reward', 
-                amount: rupees 
-            });
-            
+            earnings.push({ date: new Date().toISOString().slice(0,10), desc: 'Watch Ad', amount: rupees });
             updateEarnings();
             renderHistory();
-            
-            // Show success message with animation
-            adEarnResult.innerHTML = `
-                <div style="color: #f76b1c; font-weight: bold; font-size: 1.1rem;">
-                    🎉 Congratulations! 🎉
-                </div>
-                <div style="margin-top: 8px; color: #28a745; font-size: 1rem;">
-                    Aapko ${coins} coins (₹${rupees}) mile!
-                </div>
-                <div style="margin-top: 5px; font-size: 0.85rem; color: #6c757d;">
-                    Aaj ${dailyAdCount}/10 ads dekh liye hain
-                </div>
-                <div style="margin-top: 3px; font-size: 0.8rem; color: #17a2b8;">
-                    ${isRealAd ? '✅ Real Ad Watched' : '📺 Demo Ad Watched'}
-                </div>
-            `;
-            
-            showNotification(`Ad watch complete! +${coins} coins earned!`);
+            adEarnResult.textContent = `🎉 Aapko ${coins} coins (₹${rupees}) mile!`;
         } else {
-            adEarnResult.innerHTML = `
-                <div style="color: #dc3545; font-weight: bold;">
-                    ⚠️ Ad Complete Karein
-                </div>
-                <div style="margin-top: 5px; font-size: 0.9rem; color: #6c757d;">
-                    Reward ke liye ad poora dekhein (${adWatchTime} seconds)
-                </div>
-            `;
+            adEarnResult.textContent = 'Ad poora dekhein reward ke liye!';
         }
     };
 } 
