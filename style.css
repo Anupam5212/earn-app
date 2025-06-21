@@ -743,4 +743,8 @@ body {
 
 .do-task-btn:hover {
     background-color: #45a049;
+}
+
+.page-content {
+    padding-top: 60px; /* Height of the navbar */
 } 

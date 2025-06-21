@@ -1,333 +1,251 @@
-// Dummy user data
-let user = null;
-let earnings = [
-    { date: '2024-06-01', desc: 'Signup Bonus', amount: 100 },
-    { date: '2024-06-03', desc: 'Referral', amount: 50 },
-    { date: '2024-06-05', desc: 'Task Complete', amount: 200 }
-];
-
-// Dummy users data
-let users = [
-    { username: 'user1', earnings: [
+document.addEventListener('DOMContentLoaded', () => {
+    // Dummy user data
+    let user = null;
+    let earnings = [
         { date: '2024-06-01', desc: 'Signup Bonus', amount: 100 },
-        { date: '2024-06-03', desc: 'Referral', amount: 50 }
-    ]},
-    { username: 'user2', earnings: [
-        { date: '2024-06-02', desc: 'Signup Bonus', amount: 100 },
-        { date: '2024-06-04', desc: 'Task Complete', amount: 200 }
-    ]}
-];
-let withdrawalRequests = [
-    { user: 'user1', amount: 50, date: '2024-06-06' },
-    { user: 'user2', amount: 100, date: '2024-06-07' }
-];
+        { date: '2024-06-03', desc: 'Referral', amount: 50 },
+        { date: '2024-06-05', desc: 'Task Complete', amount: 200 }
+    ];
 
-// Auth Section
-const authSection = document.getElementById('auth-section');
-const dashboard = document.getElementById('dashboard');
-const loginForm = document.getElementById('login-form');
-const signupForm = document.getElementById('signup-form');
-const showSignup = document.getElementById('show-signup');
-const showLogin = document.getElementById('show-login');
-const notification = document.getElementById('notification');
+    // Dummy users data for admin
+    let users = [
+        { username: 'user1@test.com', earnings: [{ date: '2024-06-01', desc: 'Signup Bonus', amount: 100 }] },
+        { username: 'user2@test.com', earnings: [{ date: '2024-06-02', desc: 'Signup Bonus', amount: 100 }] }
+    ];
+    let withdrawalRequests = [
+        { user: 'user1@test.com', amount: 50, date: '2024-06-06' },
+        { user: 'user2@test.com', amount: 100, date: '2024-06-07' }
+    ];
 
-// Admin login toggle
-const showAdminLogin = document.getElementById('show-admin-login');
-const adminLoginForm = document.getElementById('admin-login-form');
-const adminLogoutBtn = document.getElementById('admin-logout-btn');
+    // --- Element Selections ---
+    const authSection = document.getElementById('auth-section');
+    const dashboard = document.getElementById('dashboard');
+    const adminPanel = document.getElementById('admin-panel');
+    const notification = document.getElementById('notification');
 
-// Login toggle buttons
-const userLoginBtn = document.getElementById('user-login-btn');
-const adminLoginBtn = document.getElementById('admin-login-btn');
+    // Auth forms
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const adminLoginForm = document.getElementById('admin-login-form');
+    
+    // Auth toggles
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
+    const userLoginBtn = document.getElementById('user-login-btn');
+    const adminLoginBtn = document.getElementById('admin-login-btn');
 
-const adminPanel = document.getElementById('admin-panel');
+    // Sidenav and navigation
+    const menuBtn = document.getElementById('menu-btn');
+    const sidenav = document.getElementById('sidenav');
+    const closeBtn = document.querySelector('.sidenav .close-btn');
+    const overlay = document.getElementById('overlay');
+    const navLinks = document.querySelectorAll('.sidenav .nav-link');
+    const pages = document.querySelectorAll('.page');
 
-userLoginBtn.onclick = () => {
-    userLoginBtn.classList.add('active');
-    adminLoginBtn.classList.remove('active');
-    loginForm.style.display = 'flex';
-    adminLoginForm.style.display = 'none';
-    signupForm.style.display = 'none';
-};
-adminLoginBtn.onclick = () => {
-    adminLoginBtn.classList.add('active');
-    userLoginBtn.classList.remove('active');
-    loginForm.style.display = 'none';
-    adminLoginForm.style.display = 'flex';
-    signupForm.style.display = 'none';
-};
+    // Ad Modal
+    const watchAdBtn = document.getElementById('watch-ad-btn');
+    const adModal = document.getElementById('ad-modal');
+    const closeAdModal = document.getElementById('close-ad-modal');
+    const adEarnResult = document.getElementById('ad-earn-result');
 
-showSignup.onclick = (e) => {
-    e.preventDefault();
-    loginForm.style.display = 'none';
-    signupForm.style.display = 'flex';
-    adminLoginForm.style.display = 'none';
-    userLoginBtn.classList.remove('active');
-    adminLoginBtn.classList.remove('active');
-};
-showLogin.onclick = (e) => {
-    e.preventDefault();
-    signupForm.style.display = 'none';
-    loginForm.style.display = 'flex';
-    adminLoginForm.style.display = 'none';
-    userLoginBtn.classList.add('active');
-    adminLoginBtn.classList.remove('active');
-};
+    // --- Functions ---
+    function showNotification(msg, isError = false) {
+        notification.textContent = msg;
+        notification.className = `notification ${isError ? 'error' : 'success'}`;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
 
-// User Login with Firebase
-loginForm.onsubmit = (e) => {
-    e.preventDefault();
-    const email = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            user = { username: email };
-            showDashboard();
-            showNotification('Login successful!');
-        })
-        .catch((error) => {
-            showNotification('Login failed: ' + error.message);
+    // --- Sidenav Logic ---
+    function openNav() {
+        if (sidenav) sidenav.style.left = "0";
+        if (overlay) overlay.classList.add('active');
+    }
+
+    function closeNav() {
+        if (sidenav) sidenav.style.left = "-250px";
+        if (overlay) overlay.classList.remove('active');
+    }
+    
+    // --- Page Navigation ---
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            
+            pages.forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(targetId);
+            if (targetPage) targetPage.classList.add('active');
+
+            navLinks.forEach(navLink => navLink.classList.remove('active'));
+            link.classList.add('active');
+            
+            closeNav(); // Close sidenav after navigation
         });
-};
-// User Signup with Firebase
-signupForm.onsubmit = (e) => {
-    e.preventDefault();
-    const email = document.getElementById('signup-username').value;
-    const password = document.getElementById('signup-password').value;
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            user = { username: email };
-            showDashboard();
-            showNotification('Signup successful!');
-        })
-        .catch((error) => {
-            showNotification(error.message);
-        });
-};
-
-document.getElementById('logout-btn').onclick = () => {
-    user = null;
-    dashboard.style.display = 'none';
-    authSection.style.display = 'block';
-    showNotification('Logged out!');
-};
-
-function showDashboard() {
-    authSection.style.display = 'none';
-    dashboard.style.display = 'block';
-    document.getElementById('user-name').textContent = user.username;
-    updateEarnings();
-    renderHistory();
-}
-
-function updateEarnings() {
-    let total = earnings.reduce((sum, e) => sum + e.amount, 0);
-    document.getElementById('total-earnings').textContent = `₹${total}`;
-    document.getElementById('available-balance').textContent = `₹${total}`;
-}
-
-function renderHistory() {
-    const tbody = document.getElementById('history-body');
-    tbody.innerHTML = '';
-    earnings.forEach(e => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${e.date}</td><td>${e.desc}</td><td>₹${e.amount}</td>`;
-        tbody.appendChild(tr);
     });
-}
 
-document.getElementById('withdraw-form').onsubmit = (e) => {
-    e.preventDefault();
-    const amount = parseInt(document.getElementById('withdraw-amount').value);
-    let total = earnings.reduce((sum, e) => sum + e.amount, 0);
-    if(amount > 0 && amount <= total) {
-        earnings.push({ date: new Date().toISOString().slice(0,10), desc: 'Withdrawal', amount: -amount });
+    // --- Authentication Logic ---
+    function showDashboardView() {
+        authSection.style.display = 'none';
+        adminPanel.style.display = 'none';
+        dashboard.style.display = 'block';
+        document.getElementById('user-name').textContent = user.username;
         updateEarnings();
         renderHistory();
-        showNotification('Withdrawal request submitted!');
-    } else {
-        showNotification('Invalid amount!');
     }
-    document.getElementById('withdraw-amount').value = '';
-};
 
-function showNotification(msg) {
-    notification.textContent = msg;
-    notification.style.display = 'block';
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 2000);
-}
-
-// Admin login form submit
-adminLoginForm.onsubmit = (e) => {
-    e.preventDefault();
-    const username = document.getElementById('admin-username').value;
-    const password = document.getElementById('admin-password').value;
-    if(username === 'admin' && password === 'admin') {
+    function showAdminPanelView() {
         authSection.style.display = 'none';
         dashboard.style.display = 'none';
         adminPanel.style.display = 'block';
-        renderAdminSummary();
-        renderUsersList();
-        renderAdminEarnings();
-        renderWithdrawalRequests();
-        showNotification('Admin login successful!');
-    } else {
-        showNotification('Invalid admin credentials!');
+        // Add admin data rendering functions here
     }
-};
+    
+    function showAuthView() {
+        user = null;
+        dashboard.style.display = 'none';
+        adminPanel.style.display = 'none';
+        authSection.style.display = 'block';
+    }
 
-adminLogoutBtn.onclick = () => {
-    adminPanel.style.display = 'none';
-    authSection.style.display = 'block';
-    showNotification('Admin logged out!');
-};
-
-function showAdminPanel() {
-    authSection.style.display = 'none';
-    dashboard.style.display = 'none';
-    adminPanel.style.display = 'block';
-    renderAdminSummary();
-    renderUsersList();
-    renderAdminEarnings();
-    renderWithdrawalRequests();
-}
-
-function renderAdminSummary() {
-    // Total Users
-    document.getElementById('admin-total-users').textContent = users.length;
-    // Total Earnings
-    let total = 0;
-    users.forEach(u => {
-        u.earnings.forEach(e => { total += e.amount; });
+    // Auth form toggles
+    userLoginBtn.addEventListener('click', () => {
+        userLoginBtn.classList.add('active');
+        adminLoginBtn.classList.remove('active');
+        loginForm.style.display = 'flex';
+        adminLoginForm.style.display = 'none';
+        signupForm.style.display = 'none';
     });
-    document.getElementById('admin-total-earnings').textContent = '₹' + total;
-    // Pending Withdrawals
-    document.getElementById('admin-pending-withdrawals').textContent = withdrawalRequests.length;
-}
-
-function renderUsersList() {
-    const ul = document.getElementById('users-list');
-    ul.innerHTML = '';
-    users.forEach(u => {
-        const li = document.createElement('li');
-        li.textContent = u.username;
-        ul.appendChild(li);
+    
+    adminLoginBtn.addEventListener('click', () => {
+        adminLoginBtn.classList.add('active');
+        userLoginBtn.classList.remove('active');
+        loginForm.style.display = 'none';
+        adminLoginForm.style.display = 'flex';
+        signupForm.style.display = 'none';
     });
-}
-function renderAdminEarnings() {
-    const tbody = document.getElementById('admin-earnings-body');
-    tbody.innerHTML = '';
-    users.forEach(u => {
-        u.earnings.forEach(e => {
+    
+    showSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        adminLoginForm.style.display = 'none';
+        signupForm.style.display = 'flex';
+    });
+    
+    showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        signupForm.style.display = 'none';
+        adminLoginForm.style.display = 'none';
+        loginForm.style.display = 'flex';
+    });
+
+    // Firebase Auth
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                user = { username: email };
+                showDashboardView();
+                showNotification('Login successful!');
+            })
+            .catch((error) => showNotification(error.message, true));
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('signup-username').value;
+        const password = document.getElementById('signup-password').value;
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                user = { username: email };
+                showDashboardView();
+                showNotification('Signup successful!');
+            })
+            .catch((error) => showNotification(error.message, true));
+    });
+
+    adminLoginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('admin-username').value;
+        const password = document.getElementById('admin-password').value;
+        if (username === 'admin' && password === 'admin') {
+            showAdminPanelView();
+            showNotification('Admin login successful!');
+        } else {
+            showNotification('Invalid admin credentials!', true);
+        }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        showAuthView();
+        showNotification('Logged out!');
+    });
+    
+    document.getElementById('admin-logout-btn').addEventListener('click', () => {
+        showAuthView();
+        showNotification('Admin logged out!');
+    });
+
+
+    // --- Dashboard & Earnings Logic ---
+    function updateEarnings() {
+        let total = earnings.reduce((sum, e) => sum + e.amount, 0);
+        document.getElementById('total-earnings').textContent = `₹${total}`;
+        document.getElementById('available-balance').textContent = `₹${total}`;
+    }
+
+    function renderHistory() {
+        const tbody = document.getElementById('history-body');
+        tbody.innerHTML = '';
+        earnings.forEach(e => {
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${u.username}</td><td>${e.date}</td><td>${e.desc}</td><td>₹${e.amount}</td>`;
+            tr.innerHTML = `<td>${e.date}</td><td>${e.desc}</td><td>₹${e.amount}</td>`;
             tbody.appendChild(tr);
         });
-    });
-}
-function renderWithdrawalRequests() {
-    const ul = document.getElementById('withdrawal-requests');
-    ul.innerHTML = '';
-    withdrawalRequests.forEach(w => {
-        const li = document.createElement('li');
-        li.textContent = `${w.user} - ₹${w.amount} (${w.date})`;
-        ul.appendChild(li);
-    });
-}
-// Admin notification form
-const adminNotifyForm = document.getElementById('admin-notify-form');
-adminNotifyForm.onsubmit = (e) => {
-    e.preventDefault();
-    const msg = document.getElementById('notify-message').value;
-    showNotification('Notification sent: ' + msg);
-    document.getElementById('notify-message').value = '';
-};
-
-// Watch Ad & Earn logic with real ad modal
-const watchAdBtn = document.getElementById('watch-ad-btn');
-const adEarnResult = document.getElementById('ad-earn-result');
-const adModal = document.getElementById('ad-modal');
-const closeAdModalBtn = document.getElementById('close-ad-modal');
-let adRewardGiven = false;
-if (watchAdBtn) {
-    watchAdBtn.onclick = () => {
-        adEarnResult.textContent = '';
-        adModal.style.display = 'flex';
-        closeAdModalBtn.disabled = true;
-        adRewardGiven = false;
-        setTimeout(() => {
-            closeAdModalBtn.disabled = false;
-            adRewardGiven = true;
-        }, 15000); // 15 sec ad watch simulation
-    };
-}
-if (closeAdModalBtn) {
-    closeAdModalBtn.onclick = () => {
-        adModal.style.display = 'none';
-        if (adRewardGiven) {
-            // Random coins: 5, 10, 20, 30, 50 (5 ka chance sabse zyada)
-            const coinsArr = [5,5,5,10,10,20,30,50];
-            const coins = coinsArr[Math.floor(Math.random() * coinsArr.length)];
-            const rupees = Math.floor(coins / 10);
-            earnings.push({ date: new Date().toISOString().slice(0,10), desc: 'Watch Ad', amount: rupees });
+    }
+    
+    document.getElementById('withdraw-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const amount = parseInt(document.getElementById('withdraw-amount').value);
+        let total = earnings.reduce((sum, e) => sum + e.amount, 0);
+        if (amount > 0 && amount <= total) {
+            earnings.push({ date: new Date().toISOString().slice(0, 10), desc: 'Withdrawal', amount: -amount });
             updateEarnings();
             renderHistory();
-            adEarnResult.textContent = `🎉 Aapko ${coins} coins (₹${rupees}) mile!`;
+            showNotification('Withdrawal request submitted!');
         } else {
-            adEarnResult.textContent = 'Ad poora dekhein reward ke liye!';
+            showNotification('Invalid amount!', true);
         }
-    };
-}
-
-const menuBtn = document.getElementById('menu-btn');
-const sidenav = document.getElementById('sidenav');
-const closeBtn = document.querySelector('.close-btn');
-const overlay = document.getElementById('overlay');
-
-function openNav() {
-    sidenav.style.left = "0";
-    overlay.classList.add('active');
-}
-
-function closeNav() {
-    sidenav.style.left = "-250px";
-    overlay.classList.remove('active');
-}
-
-menuBtn.addEventListener('click', openNav);
-closeBtn.addEventListener('click', closeNav);
-overlay.addEventListener('click', closeNav);
-
-// Update the nav link logic to close the sidenav on click
-const navLinks = document.querySelectorAll('.sidenav .nav-link');
-const pages = document.querySelectorAll('.page');
-
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('data-target');
-        
-        pages.forEach(page => {
-            page.classList.remove('active');
-            if (page.id === targetId) {
-                page.classList.add('active');
-            }
-        });
-
-        navLinks.forEach(navLink => {
-            navLink.classList.remove('active');
-        });
-        link.classList.add('active');
-
-        // Close the nav after clicking a link
-        closeNav();
+        document.getElementById('withdraw-amount').value = '';
     });
-});
+    
+    // --- Ad Modal Logic ---
+    watchAdBtn.addEventListener('click', () => {
+        adModal.style.display = 'flex';
+        closeAdModal.disabled = true;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // ... existing code ...
+        setTimeout(() => {
+            closeAdModal.disabled = false;
+        }, 15000); // 15 seconds
+    });
 
-    // ... (rest of the script)
+    closeAdModal.addEventListener('click', () => {
+        adModal.style.display = 'none';
+        const earned = Math.floor(Math.random() * 10) + 1; // Earn 1-10 coins
+        earnings.push({ date: new Date().toISOString().slice(0, 10), desc: 'Watched Ad', amount: earned });
+        updateEarnings();
+        renderHistory(); // Update history on the dashboard page
+        showNotification(`You earned ₹${earned}!`);
+    });
+
+
+    // --- Event Listeners ---
+    menuBtn.addEventListener('click', openNav);
+    closeBtn.addEventListener('click', closeNav);
+    overlay.addEventListener('click', closeNav);
+
 }); 
