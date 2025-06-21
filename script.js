@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const navLinks = document.querySelectorAll('.sidenav .nav-link');
     const pages = document.querySelectorAll('.page');
+    const dashboardDiv = document.getElementById('dashboard'); // Get the main dashboard container
 
     // Ad Modal
     const watchAdBtn = document.getElementById('watch-ad-btn');
@@ -62,11 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function openNav() {
         if (sidenav) sidenav.style.left = "0";
         if (overlay) overlay.classList.add('active');
+        if (dashboardDiv) dashboardDiv.classList.add('sidenav-open'); // Add class to shift content
     }
 
     function closeNav() {
-        if (sidenav) sidenav.style.left = "-250px";
+        if (sidenav) sidenav.style.left = "-260px";
         if (overlay) overlay.classList.remove('active');
+        if (dashboardDiv) dashboardDiv.classList.remove('sidenav-open'); // Remove class to shift content back
     }
     
     // --- Page Navigation ---

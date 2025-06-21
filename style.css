@@ -5,17 +5,17 @@
     box-sizing: border-box;
 }
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.6;
     min-height: 100vh;
 }
 .container {
-    max-width: 500px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    padding: 24px 18px;
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
 }
 .auth-section h2 {
     color: #f76b1c;
@@ -61,17 +61,30 @@ body {
     gap: 24px;
 }
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
+    padding: 0.8rem 2rem;
+    background-color: var(--secondary-color);
+    color: var(--white);
+    z-index: 20;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.logo {
+.navbar .logo {
     font-weight: bold;
-    font-size: 1.3rem;
-    color: #f76b1c;
+    font-size: 1.5rem;
+}
+.navbar .menu-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
 }
 #logout-btn {
     background: #f76b1c;
@@ -89,26 +102,25 @@ body {
     box-shadow: 0 2px 8px rgba(247,107,28,0.07);
 }
 .cards {
-    display: flex;
-    gap: 16px;
-    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
 }
 .card {
-    flex: 1;
-    background: #fff;
-    border-radius: 10px;
-    padding: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
     text-align: center;
 }
 .card h3 {
-    color: #f76b1c;
-    font-size: 1.1rem;
-    margin-bottom: 6px;
+    margin-top: 0;
+    color: var(--primary-color);
 }
 .card p {
-    font-size: 1.3rem;
+    font-size: 2rem;
     font-weight: bold;
+    margin: 0;
 }
 .history {
     margin-top: 10px;
@@ -626,38 +638,40 @@ body {
 
 .sidenav {
     height: 100%;
-    width: 250px;
+    width: 260px;
     position: fixed;
-    z-index: 10;
+    z-index: 30;
     top: 0;
-    left: -250px; /* Initially hidden */
-    background-color: #222;
+    left: -260px;
+    background-color: #2c2c2c;
     overflow-x: hidden;
-    transition: 0.5s;
+    transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     padding-top: 60px;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.2);
 }
 
 .sidenav a {
-    padding: 10px 15px;
+    padding: 12px 15px 12px 25px;
     text-decoration: none;
     font-size: 1.1rem;
-    color: #818181;
+    color: #a0a0a0;
     display: block;
-    transition: 0.3s;
+    transition: background-color 0.3s, color 0.3s;
+    border-left: 4px solid transparent;
 }
 
 .sidenav a:hover, .sidenav a.active {
-    color: #f1f1f1;
+    color: var(--white);
+    background-color: #383838;
+    border-left-color: var(--primary-color);
 }
 
 .sidenav .close-btn {
     position: absolute;
-    top: 0;
-    right: 25px;
+    top: 10px;
+    right: 15px;
     font-size: 36px;
-    margin-left: 50px;
+    color: #a0a0a0;
 }
 
 .overlay {
@@ -666,14 +680,16 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 5;
-    display: none;
-    transition: opacity 0.5s;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 25;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
 }
 
 .overlay.active {
-    display: block;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Remove old nav-links styling */
@@ -686,8 +702,7 @@ body {
 
 .page {
     display: none;
-    padding: 2rem;
-    animation: fadeIn 0.5s;
+    animation: fadeIn 0.6s;
 }
 
 .page.active {
@@ -697,6 +712,61 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.task-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.task-item {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.task-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.task-item h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.task-item p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.do-task-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.do-task-btn:hover {
+    background-color: #45a049;
+}
+
+.page-content {
+    padding: 80px 2rem 2rem 2rem; /* Add padding for fixed navbar */
+    transition: margin-left 0.4s;
+}
+
+.dashboard.sidenav-open .page-content {
+    margin-left: 260px;
 }
 
 .task-list {
