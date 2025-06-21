@@ -41,60 +41,85 @@
         <div id="dashboard" class="dashboard" style="display:none;">
             <nav class="navbar">
                 <span class="logo">EarningApp</span>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active" data-target="dashboard-home">Dashboard</a>
+                    <a href="#" class="nav-link" data-target="tasks-page">Tasks</a>
+                    <a href="#" class="nav-link" data-target="history-page">History</a>
+                    <a href="#" class="nav-link" data-target="withdrawal-page">Withdraw</a>
+                </div>
                 <button id="logout-btn">Logout</button>
             </nav>
-            <section class="summary">
-                <h2>Welcome, <span id="user-name"></span>!</h2>
-                <div class="cards">
-                    <div class="card">
-                        <h3>Total Earnings</h3>
-                        <p id="total-earnings">₹0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Available Balance</h3>
-                        <p id="available-balance">₹0</p>
-                    </div>
-                </div>
-            </section>
-            <section class="history">
-                <h3>Earning History</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-body">
-                        <!-- Earning rows -->
-                    </tbody>
-                </table>
-            </section>
-            <section class="withdrawal">
-                <h3>Withdraw Funds</h3>
-                <form id="withdraw-form">
-                    <input type="number" id="withdraw-amount" placeholder="Amount (₹)" min="1" required>
-                    <button type="submit">Withdraw</button>
-                </form>
-            </section>
-            <section class="ad-earn">
-                <h3>Watch Ad & Earn</h3>
-                <button id="watch-ad-btn">Watch Ad</button>
-                <div class="ad-earn-info">
-                    <span id="ad-earn-result"></span>
-                </div>
-                <div id="ad-modal" class="ad-modal" style="display:none;">
-                    <div class="ad-modal-content">
-                        <button id="close-ad-modal" disabled>Close</button>
-                        <!-- Adsterra ad code -->
-                        <div id="adsterra-ad-container">
-                            <script async="async" data-cfasync="false" src="//pl26972835.profitableratecpm.com/f9e6e60c66395b391858ca3302f5fc4f/invoke.js"></script>
-                            <div id="container-f9e6e60c66395b391858ca3302f5fc4f"></div>
+
+            <div class="page-content">
+                <section id="dashboard-home" class="page active">
+                    <div class="summary">
+                        <h2>Welcome, <span id="user-name"></span>!</h2>
+                        <div class="cards">
+                            <div class="card">
+                                <h3>Total Earnings</h3>
+                                <p id="total-earnings">₹0</p>
+                            </div>
+                            <div class="card">
+                                <h3>Available Balance</h3>
+                                <p id="available-balance">₹0</p>
+                            </div>
                         </div>
                     </div>
+                </section>
+
+                <section id="tasks-page" class="page">
+                    <h3>Tasks</h3>
+                    <div class="task-list">
+                        <div class="task-item" id="task-watch-ad">
+                            <h4>Watch Ad & Earn</h4>
+                            <p>Watch a short ad to earn coins.</p>
+                            <button id="watch-ad-btn" class="do-task-btn">Do Task</button>
+                        </div>
+                        <div class="task-item" id="task-daily-checkin">
+                            <h4>Daily Check-in</h4>
+                            <p>Check in every day for a bonus.</p>
+                            <button class="do-task-btn">Check In</button>
+                        </div>
+                        <!-- More tasks can be added here -->
+                    </div>
+                </section>
+
+                <section id="history-page" class="page">
+                    <h3>Earning History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <!-- Earning rows -->
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="withdrawal-page" class="page">
+                    <h3>Withdraw Funds</h3>
+                    <form id="withdraw-form">
+                        <input type="number" id="withdraw-amount" placeholder="Amount (₹)" min="1" required>
+                        <button type="submit">Withdraw</button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Ad Modal remains unchanged but is now triggered from the Tasks page -->
+            <div id="ad-modal" class="ad-modal" style="display:none;">
+                <div class="ad-modal-content">
+                    <button id="close-ad-modal" disabled>Close</button>
+                    <!-- Adsterra ad code -->
+                    <div id="adsterra-ad-container">
+                        <script async="async" data-cfasync="false" src="//pl26972835.profitableratecpm.com/f9e6e60c66395b391858ca3302f5fc4f/invoke.js"></script>
+                        <div id="container-f9e6e60c66395b391858ca3302f5fc4f"></div>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
         <!-- Admin Panel Section -->
         <div id="admin-panel" class="admin-panel" style="display:none;">

@@ -279,4 +279,26 @@ if (closeAdModalBtn) {
             adEarnResult.textContent = 'Ad poora dekhein reward ke liye!';
         }
     };
-} 
+}
+
+const navLinks = document.querySelectorAll('.nav-link');
+const pages = document.querySelectorAll('.page');
+
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('data-target');
+        
+        pages.forEach(page => {
+            page.classList.remove('active');
+            if (page.id === targetId) {
+                page.classList.add('active');
+            }
+        });
+
+        navLinks.forEach(navLink => {
+            navLink.classList.remove('active');
+        });
+        link.classList.add('active');
+    });
+}); 
